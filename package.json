@@ -1,7 +1,7 @@
 {
   "name": "small-frame",
   "version": "0.0.1",
-  "description": "Lightweight, structured message frame for small binary messages",
+  "description": "Zero-dependency structured message frame for small binary messages.",
   "author": {
     "name": "Kane Wang",
     "email": "me@kane.tw",
@@ -17,11 +17,9 @@
     "build": "tsup src/index.ts --minify --dts --format esm,cjs --no-splitting"
   },
   "devDependencies": {
-    "@types/bun": "latest",
-    "tsup": "^8.5.0"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
+    "@types/bun": "^1.2.22",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2"
   },
   "files": [
     "dist",

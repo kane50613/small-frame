@@ -5,10 +5,8 @@
       "name": "small-frame",
       "devDependencies": {
         "@types/bun": "latest",
-        "tsup": "^8.5.0",
-      },
-      "peerDependencies": {
-        "typescript": "^5",
+        "tsup": "latest",
+        "typescript": "latest",
       },
     },
   },

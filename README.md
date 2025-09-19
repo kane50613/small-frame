@@ -1,6 +1,6 @@
 # `small-frame`
 
-Lightweight, structured message frame for small binary messages.
+Zero-dependency structured message frame for small binary messages.
 
 > [!WARNING]
 > This project is still in development and the API is not stable.

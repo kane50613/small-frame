@@ -271,7 +271,7 @@ describe("small-frame", () => {
       type User = typeof UserFrame.dataType;
 
       const user: User = {
-        name: "John Doe",
+        name: "Kane",
         age: 20,
         isAdmin: false,
       };
@@ -283,7 +283,7 @@ describe("small-frame", () => {
       const user2 = UserFrame.deserialize(buffer);
 
       expect(user2).toEqual(user);
-      expect(buffer.byteLength).toBe(14); // actual size: 1+8 + 4 + 1
+      expect(buffer.byteLength).toBe(10); // actual size: 1+4 + 4 + 1
     });
   });
 

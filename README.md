@@ -62,7 +62,7 @@ const UserFrame = createFrameFromFields({
 export type User = typeof UserFrame.dataType;
 
 const user = {
-  name: "John Doe",
+  name: "Kane",
   age: 20,
   isAdmin: false,
 };
@@ -79,12 +79,14 @@ console.log(user2);
 The value will be serialized as:
 
 ```hex
-02 48 69 19 00 00 00 01
-│  │  │  │           │
-│  │  │  └─ age (25) │
-│  │  └─ "H"         │
-│  └─ "i"            │
-└─ length (2)        └─ isAdmin (true)
+04 4b 61 6e 65 00 00 00 14 00
+│  │  │  │  │  │        │  │
+│  │  │  │  │  └─ age (20) │
+│  │  │  │  └─ "e"         │
+│  │  │  └─ "n"            │
+│  │  └─ "a"               │
+│  └─ "K"                  │
+└─ length (4)             └─ isAdmin (false)
 ```
 
-Total size: 8 bytes
+Total size: 10 bytes

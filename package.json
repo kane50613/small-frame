@@ -14,9 +14,17 @@
   },
   "type": "module",
   "scripts": {
+    "lint": "biome ci .",
+    "lint:fix": "biome check . --unsafe --write",
     "build": "tsup src/index.ts --minify --dts --format esm,cjs --no-splitting"
   },
+  "exports": {
+    "default": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "require": "./dist/index.cjs"
+  },
   "devDependencies": {
+    "@biomejs/biome": "^2.2.4",
     "@types/bun": "^1.2.22",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2"

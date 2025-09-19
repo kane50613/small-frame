@@ -1,106 +1,106 @@
-import {
-  BufferView,
-  calculateMessageFrameSize,
-  createMessageFrame,
-} from "./index";
+import { BufferView } from "./buffer";
+import { createMessageSerializer } from "./frame";
+import { calculateSerializedSize } from "./utils";
 
-export const FrameFieldTypes = {
+export const FieldType = {
   BigInt: 1,
   Number: 2,
   String: 3,
   Boolean: 4,
 } as const;
 
-export type MessageFrameFields = Record<
+export type FieldDefinitions = Record<
   string,
-  (typeof FrameFieldTypes)[keyof typeof FrameFieldTypes]
+  (typeof FieldType)[keyof typeof FieldType]
 >;
 
-type InferFieldsType<Fields extends MessageFrameFields> = {
-  [K in keyof Fields]: Fields[K] extends typeof FrameFieldTypes.BigInt
+type InferFieldTypes<Fields extends FieldDefinitions> = {
+  [K in keyof Fields]: Fields[K] extends typeof FieldType.BigInt
     ? bigint
-    : Fields[K] extends typeof FrameFieldTypes.Number
+    : Fields[K] extends typeof FieldType.Number
       ? number
-      : Fields[K] extends typeof FrameFieldTypes.String
+      : Fields[K] extends typeof FieldType.String
         ? string
-        : Fields[K] extends typeof FrameFieldTypes.Boolean
+        : Fields[K] extends typeof FieldType.Boolean
           ? boolean
           : never;
 };
 
-export function createMessageFrameFromStructure<
-  Fields extends MessageFrameFields,
->(fields: Fields) {
-  const Frame = createMessageFrame<InferFieldsType<Fields>>({
+export function createFrameFromFields<Fields extends FieldDefinitions>(
+  fieldDefinitions: Fields,
+) {
+  const Frame = createMessageSerializer<InferFieldTypes<Fields>>({
     serialize(data) {
-      const size = calculateMessageFrameSize(data);
+      const size = calculateSerializedSize(data);
       const buffer = new ArrayBuffer(size);
 
       const view = BufferView.create(buffer);
 
-      for (const [key, fieldType] of Object.entries(fields)) {
-        serializeField(view, fieldType, key, data[key]);
+      for (const [fieldName, fieldType] of Object.entries(fieldDefinitions)) {
+        serializeFieldValue(view, fieldType, fieldName, data[fieldName]);
       }
 
       return view;
     },
     deserialize(buffer) {
-      const entries = Object.entries(fields).map(([key, value]) => {
-        switch (value) {
-          case FrameFieldTypes.BigInt:
-            return [key, buffer.getUint64()] as const;
-          case FrameFieldTypes.Number:
-            return [key, buffer.getUint32()] as const;
-          case FrameFieldTypes.String:
-            return [key, buffer.getString()] as const;
-          case FrameFieldTypes.Boolean:
-            return [key, buffer.getBoolean()] as const;
-          default:
-            value satisfies never;
-            throw new Error(`Unhandled field type: ${value}`);
-        }
-      });
+      const fieldEntries = Object.entries(fieldDefinitions).map(
+        ([fieldName, fieldType]) => {
+          switch (fieldType) {
+            case FieldType.BigInt:
+              return [fieldName, buffer.readUint64()] as const;
+            case FieldType.Number:
+              return [fieldName, buffer.readUint32()] as const;
+            case FieldType.String:
+              return [fieldName, buffer.readString()] as const;
+            case FieldType.Boolean:
+              return [fieldName, buffer.readBoolean()] as const;
+            default:
+              fieldType satisfies never;
+              throw new Error(`Unhandled field type: ${fieldType}`);
+          }
+        },
+      );
 
-      return Object.fromEntries(entries);
+      return Object.fromEntries(fieldEntries);
     },
   });
 
   return Frame;
 }
 
-function serializeField(
+function serializeFieldValue(
   view: BufferView,
-  fieldType: (typeof FrameFieldTypes)[keyof typeof FrameFieldTypes],
-  key: string,
-  value: unknown,
+  fieldType: (typeof FieldType)[keyof typeof FieldType],
+  fieldName: string,
+  fieldValue: unknown,
 ) {
   switch (fieldType) {
-    case FrameFieldTypes.BigInt:
-      if (typeof value !== "bigint")
-        throw new Error(`Invalid data type for bigint: ${key}`);
+    case FieldType.BigInt:
+      if (typeof fieldValue !== "bigint")
+        throw new Error(`Invalid data type for bigint: ${fieldName}`);
 
-      view.writeUint64(value);
+      view.writeUint64(fieldValue);
       break;
-    case FrameFieldTypes.Number:
-      if (typeof value !== "number")
-        throw new Error(`Invalid data type for number: ${key}`);
+    case FieldType.Number:
+      if (typeof fieldValue !== "number")
+        throw new Error(`Invalid data type for number: ${fieldName}`);
 
-      view.writeUint32(value);
+      view.writeUint32(fieldValue);
       break;
-    case FrameFieldTypes.String: {
-      if (typeof value !== "string")
-        throw new Error(`Invalid data type for string: ${key}`);
+    case FieldType.String: {
+      if (typeof fieldValue !== "string")
+        throw new Error(`Invalid data type for string: ${fieldName}`);
 
       const encoder = new TextEncoder();
 
-      view.writeBytes(encoder.encode(value));
+      view.writeBytes(encoder.encode(fieldValue));
       break;
     }
-    case FrameFieldTypes.Boolean:
-      if (typeof value !== "boolean")
-        throw new Error(`Invalid data type for boolean: ${key}`);
+    case FieldType.Boolean:
+      if (typeof fieldValue !== "boolean")
+        throw new Error(`Invalid data type for boolean: ${fieldName}`);
 
-      view.writeBoolean(value);
+      view.writeBoolean(fieldValue);
       break;
     default:
       fieldType satisfies never;

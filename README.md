@@ -80,9 +80,7 @@ The value will be serialized as:
 
 ```hex
 04 4b 61 6e 65 00 00 00 14 00
-│              │            │
-│              │            │
-└─ "Kane" (5)  └─ 20 (4)    └─ false (1)
+└─ "Kane" (5)  └─ 20 (4)   └─ false (1)
 ```
 
 Total size: 10 bytes

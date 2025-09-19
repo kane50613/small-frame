@@ -1,9 +1,9 @@
 # `small-frame`
 
-> ![NOTE]
-> This project is still in development and the API is not stable.
-
 Lightweight, structured message frame for small binary messages.
+
+> [!WARNING]
+> This project is still in development and the API is not stable.
 
 ## Usage
 

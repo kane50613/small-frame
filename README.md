@@ -5,6 +5,43 @@ Zero-dependency structured message frame for small binary messages using the **R
 > [!WARNING]
 > This project is still in development and the API is not stable.
 
+## Usage
+
+```ts
+import { createFrameFromFields, FieldType } from "small-frame";
+
+const UserFrame = createFrameFromFields({
+  name: FieldType.String,
+  age: FieldType.Number,
+  isAdmin: FieldType.Boolean,
+});
+
+export type User = typeof UserFrame.dataType;
+
+const user = { 
+  name: "Kane", 
+  age: 20, 
+  isAdmin: false 
+};
+
+// Serialize to RCSB format
+const buffer = UserFrame.serialize(user);
+
+// Deserialize from RCSB format
+const user2 = UserFrame.deserialize(buffer);
+
+console.log(user2);
+```
+
+The value will be serialized as:
+
+```hex
+04 4b 61 6e 65 00 00 00 14 00
+└─ "Kane" (5)  └─ 20 (4)   └─ false (1)
+```
+
+Total size: 10 bytes
+
 ## Really Compact Structured Binary (RCSB) Specification
 
 RCSB is a compact, type-safe binary serialization format designed for _really small structured messages_. It provides predictable encoding with minimal overhead and strong type safety.
@@ -47,40 +84,3 @@ The serialized size can be calculated as:
 - `Number`: 4 bytes
 - `BigInt`: 8 bytes
 - `String`: 1 + UTF-8 byte length
-
-## Usage
-
-```ts
-import { createFrameFromFields, FieldType } from "small-frame";
-
-const UserFrame = createFrameFromFields({
-  name: FieldType.String,
-  age: FieldType.Number,
-  isAdmin: FieldType.Boolean,
-});
-
-export type User = typeof UserFrame.dataType;
-
-const user = { 
-  name: "Kane", 
-  age: 20, 
-  isAdmin: false 
-};
-
-// Serialize to RCSB format
-const buffer = UserFrame.serialize(user);
-
-// Deserialize from RCSB format
-const user2 = UserFrame.deserialize(buffer);
-
-console.log(user2);
-```
-
-The value will be serialized as:
-
-```hex
-04 4b 61 6e 65 00 00 00 14 00
-└─ "Kane" (5)  └─ 20 (4)   └─ false (1)
-```
-
-Total size: 10 bytes

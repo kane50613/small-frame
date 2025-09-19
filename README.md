@@ -61,10 +61,10 @@ const UserFrame = createFrameFromFields({
 
 export type User = typeof UserFrame.dataType;
 
-const user = {
-  name: "Kane",
-  age: 20,
-  isAdmin: false,
+const user = { 
+  name: "Kane", 
+  age: 20, 
+  isAdmin: false 
 };
 
 // Serialize to RCSB format
@@ -80,13 +80,9 @@ The value will be serialized as:
 
 ```hex
 04 4b 61 6e 65 00 00 00 14 00
-│  │  │  │  │  │        │  │
-│  │  │  │  │  └─ age (20) │
-│  │  │  │  └─ "e"         │
-│  │  │  └─ "n"            │
-│  │  └─ "a"               │
-│  └─ "K"                  │
-└─ length (4)             └─ isAdmin (false)
+│              │            │
+│              │            │
+└─ "Kane" (5)  └─ 20 (4)    └─ false (1)
 ```
 
 Total size: 10 bytes

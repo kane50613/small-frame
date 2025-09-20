@@ -1,6 +1,6 @@
 {
   "name": "small-frame",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Zero-dependency structured message frame for small binary messages.",
   "author": {
     "name": "Kane Wang",

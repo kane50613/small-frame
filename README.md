@@ -8,7 +8,7 @@ Zero-dependency structured message frame for small binary messages using the **R
 ## Usage
 
 ```ts
-import { createFrameFromFields, FieldType } from "small-frame";
+import { createFrameFromFields, FieldType, SerializerDataType } from "small-frame";
 
 const UserFrame = createFrameFromFields({
   name: FieldType.String,
@@ -16,7 +16,7 @@ const UserFrame = createFrameFromFields({
   isAdmin: FieldType.Boolean,
 });
 
-export type User = typeof UserFrame.dataType;
+export type User = typeof UserFrame.$type;
 
 const user = { 
   name: "Kane", 

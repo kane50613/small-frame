@@ -178,9 +178,7 @@ describe("small-frame", () => {
         isActive: FieldType.Boolean,
       });
 
-      type User = typeof Frame.dataType;
-
-      const user: User = {
+      const user: typeof Frame.$type = {
         name: "John",
         age: 30,
         balance: 1000n,
@@ -268,9 +266,7 @@ describe("small-frame", () => {
         isAdmin: FieldType.Boolean,
       });
 
-      type User = typeof UserFrame.dataType;
-
-      const user: User = {
+      const user: typeof UserFrame.$type = {
         name: "Kane",
         age: 20,
         isAdmin: false,

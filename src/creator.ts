@@ -1,5 +1,6 @@
 import { BufferView } from "./buffer";
 import { createMessageSerializer } from "./frame";
+import type { FieldDefinitions, InferFieldTypes } from "./types";
 import { calculateSerializedSize } from "./utils";
 
 export const FieldType = {
@@ -9,27 +10,10 @@ export const FieldType = {
   Boolean: 4,
 } as const;
 
-export type FieldDefinitions = Record<
-  string,
-  (typeof FieldType)[keyof typeof FieldType]
->;
-
-type InferFieldTypes<Fields extends FieldDefinitions> = {
-  [K in keyof Fields]: Fields[K] extends typeof FieldType.BigInt
-    ? bigint
-    : Fields[K] extends typeof FieldType.Number
-      ? number
-      : Fields[K] extends typeof FieldType.String
-        ? string
-        : Fields[K] extends typeof FieldType.Boolean
-          ? boolean
-          : never;
-};
-
 export function createFrameFromFields<Fields extends FieldDefinitions>(
   fieldDefinitions: Fields,
 ) {
-  const Frame = createMessageSerializer<InferFieldTypes<Fields>>({
+  return createMessageSerializer<InferFieldTypes<Fields>>({
     serialize(data) {
       const size = calculateSerializedSize(data);
       const buffer = new ArrayBuffer(size);
@@ -64,8 +48,6 @@ export function createFrameFromFields<Fields extends FieldDefinitions>(
       return Object.fromEntries(fieldEntries);
     },
   });
-
-  return Frame;
 }
 
 function serializeFieldValue(

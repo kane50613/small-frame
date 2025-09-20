@@ -14,9 +14,12 @@
   },
   "type": "module",
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "lint": "biome ci .",
     "lint:fix": "biome check . --unsafe --write",
-    "build": "tsup src/index.ts --minify --dts --format esm,cjs --no-splitting"
+    "build": "tsup src/index.ts --minify --dts --format esm,cjs --no-splitting",
+    "version": "changeset version",
+    "release": "changeset publish"
   },
   "exports": {
     "types": "./dist/index.d.ts",
@@ -25,6 +28,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
+    "@changesets/cli": "^2.29.7",
     "@types/bun": "^1.2.22",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2"

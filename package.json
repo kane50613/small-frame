@@ -9,8 +9,7 @@
   },
   "license": "MIT",
   "repository": {
-    "type": "git",
-    "url": "https://github.com/kane50613/small-frame"
+    "url": "git+https://github.com/kane50613/small-frame.git"
   },
   "type": "module",
   "scripts": {

@@ -16,9 +16,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome ci .",
     "lint:fix": "biome check . --unsafe --write",
-    "build": "tsup src/index.ts --minify --dts --format esm,cjs --no-splitting",
-    "version": "changeset version",
-    "release": "changeset publish"
+    "build": "tsup src/index.ts --minify --dts --format esm,cjs --no-splitting"
   },
   "exports": {
     "types": "./dist/index.d.ts",

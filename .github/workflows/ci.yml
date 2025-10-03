@@ -3,6 +3,7 @@ name: CI
 permissions:
   id-token: write
   contents: write
+  pull-requests: write
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -50,18 +51,20 @@ jobs:
         bun-version: latest
 
     - name: Install dependencies
-      run: bun install --frozen-lockfile
+      run: bun install --frozen-lockfile && echo "$(pwd)/node_modules/.bin" >> $GITHUB_PATH
 
     - name: Run build
       run: bun run build
+
+    - name: Install latest npm
+      run: bun install -g npm@latest
 
     - name: Create Release Pull Request or Publish to npm
       id: changesets
       uses: changesets/action@v1
       with:
-        publish: bun run release
-        version: bun run version
+        publish: changeset publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         NPM_CONFIG_PROVENANCE: true
+        NPM_TOKEN: '' # https://github.com/changesets/changesets/issues/1152#issuecomment-3190884868
